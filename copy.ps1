@@ -1,34 +1,40 @@
-# PowerShell script to copy files from one directory to another using Robocopy
+# PowerShell script to copy files from one directory to another using Robocopy mode by BeNNeTTcik
+# 
 # This script is designed to be run when two specific drives are connected
-# Program consists of two parts:
+# Program consists of tree parts:
 # 1. Copy files using Robocopy
 # 2. Register a scheduled task to run the script periodically
+# 3. Remove logs older than 30 days
+#
 # Usage:
 # - To run the script immediately: '.\copy.ps1 -Mode run'
 # - To register the script as a scheduled task: '.\copy.ps1 -Mode install'
 # - To remove logs older than 30 days: '.\copy.ps1 -Mode logs'
+#
 # All operations can be run from the command line or PowerShell console. 
 # In use the script will run silently in the background.
 
 # Deafult parameter is "run", which means the script will copy files immediately.
+
 param (
     [string]$Mode = "run"
 )
 
 # --------- VARIABLES ---------
 
-# Set the task name and interval for the scheduled task
+# Set the task name and interval (in Minutes) for the scheduled task
 $taskName = "CopyFilesUsingRobocopy"
 $intervalMinutes = 30
 
-# Define source, destination, and logs paths
-$srcLabel = "D:\test"                           #path to source
-$dstLabel = "E:\test"                           #patch to destination / pozniej zmienic na Samsung2
-$targetFolderScript = "C:\robocopy"             #path to the script
-$targetNameScript = "copy.ps1"                  #name of the script
-$logsLabel = "C:\logs_robocopy"                 #path to logs
-$copyparams = "/E /XO /FFT /Z /R:3 /W:5 /PURGE" #change copy parameters as needed, the list of all parameters can be found here: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy
-#silent launch vb script
+# Set the source and destination paths, logs paths and copy parameters
+$srcLabel = "D:\test"                           # Path to source
+$dstLabel = "E:\test"                           # Patch to destination
+$logsLabel = "C:\logs_robocopy"                 # Path to logs
+$copyparams = "/E /XO /FFT /Z /R:3 /W:5 /PURGE" # Change copy parameters as needed, 
+#The list of all parameters can be found here: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy
+
+# Path to save the script and VBScript
+$targetFolderScript = "C:\robocopy"             # Path to the script
 
 # ------------ FUNCTIONS ------------
 # Synhronize files between two drives using Robocopy
@@ -76,6 +82,7 @@ function Register-Task {
 
     # ------- Robocopy task registration -------
     $scriptPath = $PSCommandPath
+    $targetNameScript = "copy.ps1"                  #name of the script
 
     # Check the folder where the script will be copied. If it does not exist, create it
     if(-not (Test-Path $targetFolderScript)) {
