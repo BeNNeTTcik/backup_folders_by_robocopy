@@ -32,3 +32,4 @@ The default path is ```C:\robocopy```, where you can find the ```copy.ps1``` scr
 ## Documentation 
 - [Microsoft Robocopy Documentation](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy)
 - [Microsoft PowerShell Documentation](https://learn.microsoft.com/en-us/powershell)
+- [Good Tutorial with many examples](https://petri.com/robocopy-complete-guide)
